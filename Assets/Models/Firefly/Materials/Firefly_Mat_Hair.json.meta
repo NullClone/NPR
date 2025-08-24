@@ -1,7 +1,16 @@
 fileFormatVersion: 2
 guid: 21eabf2cf973fa64088f23fdb8918ffc
-TextScriptImporter:
+importerOverride:
+  nativeImporterType: 2089858483
+  scriptedImporterType:
+    serializedVersion: 2
+    Hash: cf5af9b26df29fe37615dfb0f8b44cc9
+ScriptedImporter:
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+  script: {fileID: 11500000, guid: 056cbe82ace7ea54eb3383cb30c7ae11, type: 3}
+  overrideShaderName: miHoYo/CRP_Character/CharacterHair

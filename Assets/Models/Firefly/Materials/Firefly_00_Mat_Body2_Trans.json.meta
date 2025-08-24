@@ -1,7 +1,16 @@
 fileFormatVersion: 2
 guid: 1b90efc83eeba3e4499d5b135b865a2e
-TextScriptImporter:
+importerOverride:
+  nativeImporterType: 2089858483
+  scriptedImporterType:
+    serializedVersion: 2
+    Hash: cf5af9b26df29fe37615dfb0f8b44cc9
+ScriptedImporter:
+  internalIDToNameTable: []
   externalObjects: {}
+  serializedVersion: 2
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+  script: {fileID: 11500000, guid: 056cbe82ace7ea54eb3383cb30c7ae11, type: 3}
+  overrideShaderName: miHoYo/CRP_Character/CharacterBase
