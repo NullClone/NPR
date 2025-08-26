@@ -24,7 +24,6 @@ namespace NPR.Editor.Settings
 
         private VisualElement m_Root;
         private VisualElement m_Body;
-        private VisualElement m_Foot;
 
 
         // Methods
@@ -33,14 +32,12 @@ namespace NPR.Editor.Settings
         {
             m_Root = new VisualElement { name = NAME_CONTAINER_ROOT };
             m_Body = new VisualElement { name = NAME_CONTAINER_BODY };
-            m_Foot = new VisualElement { name = NAME_CONTAINER_FOOT };
 
             StyleSheetUtils.Load(ref m_Root, USS_PATH);
 
             RefreshAsset();
 
             m_Root.Add(m_Body);
-            m_Root.Add(m_Foot);
 
             return m_Root;
         }
@@ -104,18 +101,18 @@ namespace NPR.Editor.Settings
                 }
             };
 
-            /*
+            var gameName = "Honkai Star Rail";
+
             btnInstall.clicked += () =>
             {
-                Application.OpenURL(string.Format(STORE_LINK, id));
+                ResourceManager.DownloadGameResourcesAsync(gameName);
             };
-            */
 
             btnInstall.SetEnabled(true);
 
             head.Add(btnExpand);
-            head.Add(new LabelTitle("TextUtils.Humanize(id)"));
-            head.Add(new Label("label"));
+            head.Add(new LabelTitle(gameName));
+            head.Add(new Label("v 1.2"));
             //head.Add(new Image { image = icon });
             head.Add(btnInstall);
         }

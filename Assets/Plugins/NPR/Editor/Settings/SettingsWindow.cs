@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace NPR.Editor.Settings
 {
@@ -11,8 +13,9 @@ namespace NPR.Editor.Settings
 
         private static SettingsWindow _window;
 
+        private int _selectedIndex;
+        private InspectorElement _inspectorElement;
         private TAssetRepository[] _assets;
-        private int _selectedIndex = 0;
 
 
         private const string MENU_ITEM_OPEN = "NPR/Settings";
@@ -27,23 +30,11 @@ namespace NPR.Editor.Settings
         [MenuItem(MENU_ITEM_OPEN)]
         public static void OpenWindow()
         {
-            SetupWindow();
-        }
-
-        private static void SetupWindow()
-        {
             if (_window != null) _window.Close();
 
             _window = GetWindow<SettingsWindow>();
 
             _window.minSize = new Vector2(MIN_WIDTH, MIN_HEIGHT);
-        }
-
-        private static int CompareAssetRepositories(TAssetRepository x, TAssetRepository y)
-        {
-            if (x == null || y == null) return 0;
-
-            return x.Priority.CompareTo(y.Priority);
         }
 
         private void OnEnable()
@@ -62,40 +53,76 @@ namespace NPR.Editor.Settings
             }
 
             Array.Sort(_assets, CompareAssetRepositories);
-        }
 
-        private void OnGUI()
-        {
-            DrawHeader();
 
-            if (_selectedIndex >= 0 && _selectedIndex < _assets.Length)
+            static int CompareAssetRepositories(TAssetRepository x, TAssetRepository y)
             {
-                var selectedObject = _assets[_selectedIndex];
+                if (x == null || y == null) return 0;
 
-                if (selectedObject != null)
-                {
-                    var editor = UnityEditor.Editor.CreateEditor(selectedObject);
-
-                    editor.OnInspectorGUI();
-                }
+                return x.Priority.CompareTo(y.Priority);
             }
         }
 
-        private void DrawHeader()
+        private void CreateGUI()
         {
-            EditorGUILayout.Space();
-            EditorGUILayout.BeginHorizontal();
+            var inspectorContainer = new VisualElement();
 
-            GUILayout.FlexibleSpace();
+            if (_inspectorElement == null)
+            {
+                OnChange(inspectorContainer);
+            }
 
-            var names = _assets.Select(t => t.Name).ToArray();
+            var imguiContainer = new IMGUIContainer
+            {
+                onGUIHandler = () =>
+                {
+                    EditorGUILayout.Space();
+                    EditorGUILayout.BeginHorizontal();
 
-            _selectedIndex = GUILayout.Toolbar(_selectedIndex, names, Styles.buttonStyle, GUI.ToolbarButtonSize.FitToContents);
+                    GUILayout.FlexibleSpace();
 
-            GUILayout.FlexibleSpace();
+                    EditorGUI.BeginChangeCheck();
 
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space();
+                    _selectedIndex = GUILayout.Toolbar(
+                        _selectedIndex,
+                        _assets.Select(t => t.Name).ToArray(),
+                        Styles.buttonStyle,
+                        GUI.ToolbarButtonSize.FitToContents);
+
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        OnChange(inspectorContainer);
+                    }
+
+                    GUILayout.FlexibleSpace();
+
+                    EditorGUILayout.EndHorizontal();
+                    EditorGUILayout.Space();
+                }
+            };
+
+            rootVisualElement.Add(imguiContainer);
+            rootVisualElement.Add(inspectorContainer);
+        }
+
+        private void OnChange(VisualElement visualElement)
+        {
+            if (_selectedIndex >= 0 && _selectedIndex < _assets.Length)
+            {
+                var asset = _assets[_selectedIndex];
+
+                if (asset != null)
+                {
+                    if (_inspectorElement != null)
+                    {
+                        visualElement.Clear();
+                    }
+
+                    _inspectorElement = new InspectorElement(asset);
+
+                    visualElement.Add(_inspectorElement);
+                }
+            }
         }
 
 
