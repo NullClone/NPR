@@ -9,14 +9,8 @@ namespace NPR.Editor.Settings
     {
         // Fields
 
-        private const string USS_PATH = PathUtils.SETTINGS_STYLES_DIRECTORY + "Updates.uss";
-
-        private const string EXPAND_MORE = "+";
-        private const string EXPAND_LESS = "-";
-
         private const string NAME_CONTAINER_ROOT = "GC-Updates-Container-Root";
         private const string NAME_CONTAINER_BODY = "GC-Updates-Container-Body";
-        private const string NAME_CONTAINER_FOOT = "GC-Updates-Container-Foot";
 
         private const string NAME_ASSET_ROOT = "GC-Updates-Asset-Root";
         private const string NAME_ASSET_HEAD = "GC-Updates-Asset-Head";
@@ -33,16 +27,20 @@ namespace NPR.Editor.Settings
             m_Root = new VisualElement { name = NAME_CONTAINER_ROOT };
             m_Body = new VisualElement { name = NAME_CONTAINER_BODY };
 
-            StyleSheetUtils.Load(ref m_Root, USS_PATH);
+            StyleSheetUtils.Load(ref m_Root, $"{PathUtils.SETTINGS_STYLES_DIRECTORY}/Updates.uss");
 
-            RefreshAsset();
+            foreach (var key in ResourceConfig.Games.Keys)
+            {
+                CreateAsset(key);
+            }
 
             m_Root.Add(m_Body);
 
             return m_Root;
         }
 
-        private void RefreshAsset()
+
+        private void CreateAsset(string id)
         {
             var root = new VisualElement { name = NAME_ASSET_ROOT };
             var head = new VisualElement { name = NAME_ASSET_HEAD };
@@ -53,21 +51,19 @@ namespace NPR.Editor.Settings
 
             m_Body.Add(root);
 
-            CreateHead(head, body);
-            CreateBody(body);
+            CreateHead(id, head, body);
+            CreateBody(id, body);
         }
 
-        private void CreateHead(VisualElement head, VisualElement body)
+        private void CreateHead(string id, VisualElement head, VisualElement body)
         {
-            /*
-            Texture icon = isInstalled
-                ? isInstalledOlder ? ICON_INSTALLED_UPD.Texture : ICON_INSTALLED_YES.Texture
-                : ICON_INSTALLED_NO.Texture;
-            */
+            var path = $"{PathUtils.RESOURCE_DIRECTORY}/{id}";
 
-            var btnExpand = new Button
+            var isInstalled = AssetDatabase.IsValidFolder(path);
+
+            var expandButton = new Button
             {
-                text = EXPAND_MORE,
+                text = "=",
                 style =
                 {
                     width = new Length(20, LengthUnit.Pixel),
@@ -75,49 +71,44 @@ namespace NPR.Editor.Settings
                 }
             };
 
-            btnExpand.clicked += () =>
+            expandButton.clicked += () =>
             {
-                body.style.display = body.style.display == DisplayStyle.None
-                    ? DisplayStyle.Flex
-                    : DisplayStyle.None;
-
-                btnExpand.text = body.style.display == DisplayStyle.None
-                    ? EXPAND_MORE
-                    : EXPAND_LESS;
+                body.style.display = (body.style.display == DisplayStyle.None) ? DisplayStyle.Flex : DisplayStyle.None;
+                expandButton.text = (body.style.display == DisplayStyle.None) ? "=" : "-";
             };
 
-            var btnInstall = new Button
+            var installButton = new Button
             {
-                /*
-                text = isInstalled
-                    ? isInstalledOlder ? "Update" : "Installed"
-                    : "Download",
-                */
-                text = "Update",
+                text = isInstalled ? "UnInstall" : "Download",
                 style =
                 {
                     width = new Length(100, LengthUnit.Pixel),
                     borderLeftWidth = new StyleFloat(1)
+                },
+            };
+
+            installButton.clicked += () =>
+            {
+                if (isInstalled)
+                {
+                    ResourceManager.DeleteResourcesAsync(id);
+                }
+                else
+                {
+                    ResourceManager.DownloadResourcesAsync(id);
                 }
             };
 
-            var gameName = "Honkai Star Rail";
+            installButton.SetEnabled(true);
 
-            btnInstall.clicked += () =>
-            {
-                ResourceManager.DownloadGameResourcesAsync(gameName);
-            };
-
-            btnInstall.SetEnabled(true);
-
-            head.Add(btnExpand);
-            head.Add(new LabelTitle(gameName));
-            head.Add(new Label("v 1.2"));
+            head.Add(expandButton);
+            head.Add(new LabelTitle(id));
+            //head.Add(new Label("v 1.2"));
             //head.Add(new Image { image = icon });
-            head.Add(btnInstall);
+            head.Add(installButton);
         }
 
-        private void CreateBody(VisualElement body)
+        private void CreateBody(string id, VisualElement body)
         {
             body.Add(new LabelTitle($""));
             body.Add(new Space());

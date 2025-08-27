@@ -451,7 +451,7 @@ namespace NPR.Editor.Services
                     // Debug log for URL decoding
                     if (originalPath != relativePath)
                     {
-                        Debug.Log($"Decoded file path: '{originalPath}' -> '{relativePath}'");
+                        //Debug.Log($"Decoded file path: '{originalPath}' -> '{relativePath}'");
                     }
                 }
             }

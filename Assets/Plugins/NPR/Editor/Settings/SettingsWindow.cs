@@ -11,9 +11,9 @@ namespace NPR.Editor.Settings
     {
         // Fields
 
-        private static SettingsWindow _window;
+        public static SettingsWindow _window;
 
-        private int _selectedIndex;
+        public int _selectedIndex = 0;
         private InspectorElement _inspectorElement;
         private TAssetRepository[] _assets;
 
@@ -107,21 +107,18 @@ namespace NPR.Editor.Settings
 
         private void OnChange(VisualElement visualElement)
         {
-            if (_selectedIndex >= 0 && _selectedIndex < _assets.Length)
+            var asset = _assets[_selectedIndex];
+
+            if (asset != null)
             {
-                var asset = _assets[_selectedIndex];
-
-                if (asset != null)
+                if (_inspectorElement != null)
                 {
-                    if (_inspectorElement != null)
-                    {
-                        visualElement.Clear();
-                    }
-
-                    _inspectorElement = new InspectorElement(asset);
-
-                    visualElement.Add(_inspectorElement);
+                    visualElement.Clear();
                 }
+
+                _inspectorElement = new InspectorElement(asset);
+
+                visualElement.Add(_inspectorElement);
             }
         }
 

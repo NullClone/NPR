@@ -8,9 +8,9 @@ namespace NPR.Editor.Utilities
     {
         private static readonly string[] SHARED_STYLES =
         {
-            "CommonElements.uss",
-            "CommonValues.uss",
-            "CommonColors.uss",
+            "CommonElements",
+            "CommonValues",
+            "CommonColors",
         };
 
         private static readonly Dictionary<int, StyleSheet> STYLESHEETS = new();
@@ -19,9 +19,7 @@ namespace NPR.Editor.Utilities
         {
             foreach (var style in SHARED_STYLES)
             {
-                var path = PathUtils.COMMON_STYLES_DIRECTORY + style;
-
-                root.styleSheets.Add(LoadStyleSheet(path));
+                root.styleSheets.Add(LoadStyleSheet($"{PathUtils.COMMON_STYLES_DIRECTORY}/{style}.uss"));
             }
 
             foreach (var path in paths)

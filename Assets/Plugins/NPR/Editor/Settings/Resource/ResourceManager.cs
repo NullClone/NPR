@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,14 +13,40 @@ namespace NPR.Editor.Settings
 {
     public static class ResourceManager
     {
-        public static void DownloadGameResourcesAsync(string gameKey)
+        public static async void DownloadResourcesAsync(string gameKey)
         {
-            GetFileListAsync(gameKey);
+            if (string.IsNullOrEmpty(gameKey)) return;
+
+            var id = Progress.Start("Downloading Resources");
+
+            Progress.ShowDetails();
+
+            Progress.RegisterCancelCallback(id, () =>
+            {
+                return true;
+            });
+
+            Progress.Report(id, 0f, $"Scanning {gameKey} files...");
+
+            await DownloadGameResourcesAsync(gameKey, id);
+
+            Progress.Report(id, 0f, $"{gameKey} completed !");
+
+            Progress.Finish(id, Progress.Status.Succeeded);
+
+            Debug.Log($"Successfully downloaded {gameKey} resources.");
         }
 
-        private static async void GetFileListAsync(string gameKey)
+        private static async Task DownloadGameResourcesAsync(string gameKey, int id)
         {
-            var url = ResourceConfig.Games[gameKey];
+            Progress.Report(id, 0f, $"Connecting to {gameKey} server...");
+
+            if (!ResourceConfig.Games.TryGetValue(gameKey, out string url))
+            {
+                Debug.LogError("No valid game keys specified for download.");
+
+                return;
+            }
 
             var token = NextCloudClient.ExtractTokenFromShareUrl(url);
 
@@ -41,20 +68,26 @@ namespace NPR.Editor.Settings
 
             files = files.Where(f => !f.IsDirectory && !f.RelativePath.EndsWith("/") && !f.RelativePath.EndsWith("\\")).ToList();
 
+            Progress.Report(id, 0f, $"Starting {gameKey} downloads...");
+
             if (!Directory.Exists(PathUtils.RESOURCE_DIRECTORY))
             {
                 Directory.CreateDirectory(PathUtils.RESOURCE_DIRECTORY);
             }
 
-            var path = PathUtils.RESOURCE_DIRECTORY + gameKey;
+            var path = $"{PathUtils.RESOURCE_DIRECTORY}/{gameKey}";
 
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
 
+            int i = 1;
+
             foreach (var file in files)
             {
+                Progress.Report(id, i / (float)files.Count, $"Downloading {i} / {files.Count} ...");
+
                 var cleanRelativePath = file.RelativePath.Replace('/', Path.DirectorySeparatorChar);
 
                 var localPath = Path.Combine(path, cleanRelativePath);
@@ -85,11 +118,23 @@ namespace NPR.Editor.Settings
                 using var fs = new FileStream(localPath, FileMode.Create, FileAccess.Write);
 
                 await stream.CopyToAsync(fs);
+
+                i++;
             }
 
             AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+        }
 
-            Debug.Log($"Successfully downloaded {gameKey} resources ({files.Count} files).");
+        public static void DeleteResourcesAsync(string gameKey)
+        {
+            var path = $"{PathUtils.RESOURCE_DIRECTORY}/{gameKey}";
+
+            if (AssetDatabase.IsValidFolder(path))
+            {
+                AssetDatabase.DeleteAsset(path);
+            }
+
+            AssetDatabase.Refresh();
         }
     }
 }

@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hyacine_00_Mat_Face
+  m_Shader: {fileID: 4800000, guid: 3f53a3e2121cdeb45add576d5904d75e, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _FACEMAPUV2_ON
+  - _MODEL_GAME
+  - _OUTLINENORMAL_TANGENT
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _ExpressionMap:
+        m_Texture: {fileID: 2800000, guid: 09881d6f9c541ed41923507f82991c39, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FaceMap:
+        m_Texture: {fileID: 2800000, guid: 92339da784225994d93d07a0b0fca116, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: cee3c33c960da8545819731057872b64, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaTest: 0
+    - _AlphaTestThreshold: 0.5
+    - _DitherAlpha: 1
+    - _DstBlendAlpha: 0
+    - _EmissionIntensity: 0.65
+    - _EmissionThreshold: 0.8
+    - _ExCheekIntensity: 0
+    - _ExShadowIntensity: 0
+    - _ExShyIntensity: 0
+    - _EyeAlwaysLit: 0.2
+    - _FaceMapUV2: 1
+    - _HairShadowDistance: 0.2
+    - _MaxEyeHairDistance: 0.2
+    - _Model: 0
+    - _ModelScale: 1
+    - _NoseLinePower: 5.03
+    - _OutlineNormal: 0
+    - _OutlineWidth: 1
+    - _OutlineZOffset: 0
+    - _SelfShadowDepthBias: -0.01
+    - _SelfShadowNormalBias: 0
+    - _SrcBlendAlpha: 0
+    - _mmBloomIntensity0: 0.02
+    m_Colors:
+    - _BloomColor0: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ExCheekColor: {r: 1, g: 0.665489, b: 0.61960787, a: 1}
+    - _ExEyeColor: {r: 0.68529725, g: 0.71892935, b: 0.8301887, a: 1}
+    - _ExShadowColor: {r: 0, g: 0.14433968, b: 0.32075468, a: 1}
+    - _ExShyColor: {r: 1, g: 0.8200682, b: 0.7882353, a: 1}
+    - _EyeShadowColor: {r: 0.88166666, g: 0.90083337, b: 0.92, a: 1}
+    - _MMDHeadBoneForward: {r: 0, g: 0, b: 1, a: 0}
+    - _MMDHeadBoneRight: {r: 1, g: 0, b: 0, a: 0}
+    - _MMDHeadBoneUp: {r: 0, g: 1, b: 0, a: 0}
+    - _Maps_ST: {r: 1, g: 1, b: 0, a: 0}
+    - _NoseLineColor: {r: 0.38823527, g: 0.13333327, b: 0.09019602, a: 1}
+    - _OutlineColor0: {r: 0.3962264, g: 0.16801257, b: 0.12522249, a: 1}
+    - _ShadowColor: {r: 1, g: 0.92815673, b: 0.9150943, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
